@@ -1,12 +1,12 @@
 package com.github.yuizho;
 
+import com.github.yuizho.annotation.Transactional;
 import com.github.yuizho.entity.Sample;
 import com.github.yuizho.repository.SampleRepository;
 import com.tngtech.archunit.core.domain.JavaAccess;
 import com.tngtech.archunit.core.domain.JavaCodeUnit;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,11 +37,11 @@ public class Main {
         }
 
         public void findUsages(Set<? extends JavaAccess<?>> javaAccesses, List<JavaCodeUnit> callStack) {
-            // Transactionalの代わりにTransientをチェック
+            // トランザクション境界が作られていないコールスタックをチェック (境界が作られてたらcontinue)
             for (JavaAccess<?> javaAccess : javaAccesses) {
                 var appliedTransactional = javaAccess
                         .getOwner()
-                        .tryGetAnnotationOfType(Transient.class)
+                        .tryGetAnnotationOfType(Transactional.class)
                         .isPresent();
                 if (appliedTransactional) {
                     continue;

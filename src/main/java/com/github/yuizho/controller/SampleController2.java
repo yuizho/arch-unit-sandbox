@@ -1,8 +1,7 @@
 package com.github.yuizho.controller;
 
+import com.github.yuizho.annotation.Transactional;
 import com.github.yuizho.service.SampleService;
-
-import java.beans.Transient;
 
 public class SampleController2 {
     private final SampleService sampleService;
@@ -11,7 +10,7 @@ public class SampleController2 {
         this.sampleService = new SampleService();
     }
 
-    @Transient
+    @Transactional
     public String save() {
         sampleService.save(2);
         return "OK";
