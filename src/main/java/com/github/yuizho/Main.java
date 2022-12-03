@@ -4,6 +4,7 @@ import com.github.yuizho.annotation.Transactional;
 import com.github.yuizho.repository.BaseRepository;
 import com.tngtech.archunit.core.domain.JavaAccess;
 import com.tngtech.archunit.core.domain.JavaCodeUnit;
+import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ public class Main {
         // https://qiita.com/opengl-8080/items/0d0006918c2936c9986e#%E5%8F%82%E7%85%A7%E5%85%83%E3%81%AE%E5%8F%96%E5%BE%97
         var tracer = new Tracer();
         tracer.findUsages(saveMethod.getAccessesToSelf(), List.of(saveMethod));
-
         tracer.getViolations().forEach(System.out::println);
     }
 
@@ -37,18 +37,18 @@ public class Main {
         public void findUsages(Set<? extends JavaAccess<?>> javaAccesses, List<JavaCodeUnit> callStack) {
             // トランザクション境界が作られていないコールスタックをチェック (境界が作られてたらcontinue)
             for (JavaAccess<?> javaAccess : javaAccesses) {
-                var appliedTransactional = javaAccess
-                        .getOwner()
-                        .tryGetAnnotationOfType(Transactional.class)
-                        .isPresent();
-                if (appliedTransactional) {
+                var method = javaAccess.getOwner();
+
+                var appliedTransactional = method.tryGetAnnotationOfType(Transactional.class).isPresent();
+                var isPublic = method.getModifiers().stream().anyMatch(m -> m == JavaModifier.PUBLIC);
+                if (appliedTransactional && isPublic) {
                     continue;
                 }
 
                 var copiedCallStack = new ArrayList<>(callStack);
-                copiedCallStack.add(javaAccess.getOwner());
+                copiedCallStack.add(method);
 
-                var callers = javaAccess.getOwner().getAccessesToSelf();
+                var callers = method.getAccessesToSelf();
                 if (callers.isEmpty()) {
                     violations.add(new Violation(copiedCallStack));
                     continue;

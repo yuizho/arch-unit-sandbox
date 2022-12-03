@@ -14,11 +14,11 @@ public class SampleService2 {
         this.sampleRepository2 = new SampleRepository2();
     }
 
-    @Transactional
     public void save(int id) {
         sampleRepository.save(new Sample(id));
     }
 
+    @Transactional
     public void save2(int id) {
         sampleRepository2.save(new Sample(id));
     }

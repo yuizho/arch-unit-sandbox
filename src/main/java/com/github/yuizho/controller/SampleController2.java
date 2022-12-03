@@ -11,7 +11,7 @@ public class SampleController2 {
     }
 
     @Transactional
-    public String save() {
+    private String save() {
         sampleService.save(2);
         return "OK";
     }
