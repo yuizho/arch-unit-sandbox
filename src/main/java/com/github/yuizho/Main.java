@@ -10,6 +10,7 @@ import com.tngtech.archunit.core.importer.ClassFileImporter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String... args) {
@@ -70,9 +71,10 @@ public class Main {
 
         @Override
         public String toString() {
-            return "Violation{" +
-                    "callStack=" + callStack +
-                    '}';
+            return callStack
+                    .stream()
+                    .map(j -> j.getFullName() + " " + j.getSourceCodeLocation())
+                    .collect(Collectors.joining(", "));
         }
     }
 }
