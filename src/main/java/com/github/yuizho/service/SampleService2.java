@@ -3,10 +3,10 @@ package com.github.yuizho.service;
 import com.github.yuizho.entity.Sample;
 import com.github.yuizho.repository.SampleRepository;
 
-public class SampleService {
+public class SampleService2 {
     private final SampleRepository sampleRepository;
 
-    public SampleService() {
+    public SampleService2() {
         this.sampleRepository = new SampleRepository();
     }
 

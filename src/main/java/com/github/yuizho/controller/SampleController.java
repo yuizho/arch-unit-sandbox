@@ -13,4 +13,8 @@ public class SampleController {
         sampleService.save(1);
         return "OK";
     }
+
+    public String find(int i) {
+        return sampleService.find(i).toString();
+    }
 }
