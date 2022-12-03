@@ -10,7 +10,7 @@ public class SampleService {
         this.sampleRepository = new SampleRepository();
     }
 
-    public void save() {
-        sampleRepository.save(new Sample(1));
+    public void save(int id) {
+        sampleRepository.save(new Sample(id));
     }
 }

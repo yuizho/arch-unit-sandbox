@@ -2,15 +2,18 @@ package com.github.yuizho.controller;
 
 import com.github.yuizho.service.SampleService;
 
-public class SampleController {
+import java.beans.Transient;
+
+public class SampleController2 {
     private final SampleService sampleService;
 
-    public SampleController() {
+    public SampleController2() {
         this.sampleService = new SampleService();
     }
 
+    @Transient
     public String save() {
-        sampleService.save(1);
+        sampleService.save(2);
         return "OK";
     }
 }
