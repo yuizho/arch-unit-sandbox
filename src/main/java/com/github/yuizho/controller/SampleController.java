@@ -9,7 +9,7 @@ public class SampleController {
         this.sampleService = new SampleService();
     }
 
-    public String save() {
+    public String save_NG_NoAnnotation() {
         sampleService.save(1);
         return "OK";
     }
