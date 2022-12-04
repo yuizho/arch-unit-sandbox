@@ -37,18 +37,17 @@ public class Main {
         public void findUsages(Set<? extends JavaAccess<?>> javaAccesses, List<JavaCodeUnit> callStack) {
             // トランザクション境界が作られていないコールスタックをチェック (境界が作られてたらcontinue)
             for (JavaAccess<?> javaAccess : javaAccesses) {
-                var method = javaAccess.getOwner();
+                var currentMethod = javaAccess.getOwner();
 
-                var appliedTransactional = method.tryGetAnnotationOfType(Transactional.class).isPresent();
-                var isPublic = method.getModifiers().stream().anyMatch(m -> m == JavaModifier.PUBLIC);
-                if (appliedTransactional && isPublic) {
+                var isPublic = currentMethod.getModifiers().stream().anyMatch(m -> m == JavaModifier.PUBLIC);
+                if (currentMethod.isAnnotatedWith(Transactional.class) && isPublic) {
                     continue;
                 }
 
                 var copiedCallStack = new ArrayList<>(callStack);
-                copiedCallStack.add(method);
+                copiedCallStack.add(currentMethod);
 
-                var callers = method.getAccessesToSelf();
+                var callers = currentMethod.getAccessesToSelf();
                 if (callers.isEmpty()) {
                     violations.add(new Violation(copiedCallStack));
                     continue;
